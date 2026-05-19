@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PakHelper">
+<meta name="theme-color" content="#0a0f1e">
+<title>PakHelper 🇵🇰</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #080d18;
+    --surface: #0f1623;
+    --card: #131d2e;
+    --border: #1a3050;
+    --green: #00e5a0;
+    --green-dim: #00a870;
+    --red: #ff3d57;
+    --yellow: #ffc93c;
+    --blue: #3d9eff;
+    --orange: #ff7043;
+    --text: #ddeeff;
+    --muted: #6a90b0;
+    --nav-h: 68px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: sticky; top: 0; z-index: 100;
+    background: linear-gradient(180deg, #0a0f1e 80%, transparent);
+    padding: 14px 16px 10px;
+    display: flex; justify-content: space-between; align-items: center;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-brand { display: flex; align-items: center; gap: 10px; }
+  .header-title { font-size: 20px; font-weight: 800; color: var(--green); letter-spacing: 0.5px; }
+  .header-sub { font-size: 11px; color: var(--muted); margin-top: 1px; font-family: 'Noto Nastaliq Urdu', serif; }
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.3);
+    border-radius: 20px; padding: 4px 10px;
+  }
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  .live-text { font-size: 11px; color: var(--green); font-weight: 600; }
+
+  /* ── TABS ── */
+  .tab-content { display: none; padding: 14px 14px calc(var(--nav-h) + 14px); }
+  .tab-content.active { display: block; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: #0b1220;
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 6px 0 calc(env(safe-area-inset-bottom, 0px) + 6px);
+    z-index: 200;
+  }
+  .nav-btn {
+    flex: 1; background: none; border: none; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 4px 0; outline: none;
+  }
+  .nav-icon {
+    width: 38px; height: 38px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .nav-btn.active .nav-icon {
+    background: rgba(0,229,160,0.15); border-color: rgba(0,229,160,0.4);
+  }
+  .nav-label { font-size: 10px; color: var(--muted); font-weight: 500; transition: color 0.15s; }
+  .nav-btn.active .nav-label { color: var(--green); font-weight: 700; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 14px 16px; margin-bottom: 10px;
+  }
+  .card-accent-red { border-left: 3px solid var(--red); }
+  .card-accent-green { border-left: 3px solid var(--green); }
+  .card-accent-yellow { border-left: 3px solid var(--yellow); }
+  .card-accent-blue { border-left: 3px solid var(--blue); }
+
+  .section-label {
+    font-size: 11px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: 1.2px; margin-bottom: 10px; font-weight: 600;
+  }
+
+  /* ── HOME ── */
+  .hero-box {
+    background: linear-gradient(135deg, #091a2c 0%, #081f18 100%);
+    border: 1px solid rgba(0,229,160,0.2);
+    border-radius: 20px; padding: 22px 18px; margin-bottom: 14px;
+    position: relative; overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute; top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, rgba(0,229,160,0.15), transparent 70%);
+  }
+  .hero-time { font-size: 46px; font-weight: 800; color: var(--green); font-family: monospace; letter-spacing: 2px; }
+  .hero-date { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .hero-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    border-radius: 8px; padding: 5px 10px; font-size: 11px; font-weight: 600;
+    border: 1px solid; white-space: nowrap;
+  }
+
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 13px 14px;
+  }
+  .stat-icon { font-size: 22px; }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 5px; }
+  .stat-val { font-size: 19px; font-weight: 700; color: var(--text); }
+  .stat-unit { font-size: 11px; color: var(--muted); }
+
+  .news-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px; margin-bottom: 8px;
+    border-left: 3px solid;
+  }
+  .news-headline { font-size: 13px; line-height: 1.45; }
+  .news-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+  .news-time { font-size: 11px; color: var(--muted); }
+  .news-tag { border-radius: 5px; padding: 2px 7px; font-size: 10px; font-weight: 600; }
+
+  .price-table { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .price-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
+  }
+  .price-row:last-child { border-bottom: none; }
+  .price-name { font-size: 13px; color: var(--text); }
+  .price-val { font-size: 14px; font-weight: 700; color: var(--green); }
+  .price-trend { font-size: 15px; }
+
+  /* ── FUEL ── */
+  .fuel-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px; margin-bottom: 10px;
+  }
+  .fuel-name { font-size: 15px; font-weight: 600; }
+  .fuel-hike { font-size: 12px; color: var(--red); margin-top: 3px; }
+  .fuel-price { font-size: 26px; font-weight: 800; color: var(--green); }
+  .fuel-unit { font-size: 11px; color: var(--muted); }
+  .fuel-compare {
+    background: rgba(255,61,87,0.08); border-radius: 8px;
+    padding: 6px 10px; margin-top: 10px; font-size: 12px; color: var(--muted);
+  }
+  .calc-box {
+    background: linear-gradient(135deg, #091a2c, #081f18);
+    border: 1px solid rgba(0,229,160,0.25); border-radius: 16px; padding: 16px; margin-top: 6px;
+  }
+  .calc-title { font-size: 15px; font-weight: 700; color: var(--green); margin-bottom: 12px; }
+  .input-field {
+    width: 100%; background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 11px 13px; font-size: 14px; outline: none;
+    font-family: 'Sora', sans-serif; margin-bottom: 10px;
+  }
+  .input-field:focus { border-color: var(--green); }
+  .calc-result {
+    background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.3);
+    border-radius: 10px; padding: 12px 16px; margin-top: 4px;
+  }
+  .calc-result-label { font-size: 12px; color: var(--muted); }
+  .calc-result-val { font-size: 28px; font-weight: 800; color: var(--green); }
+
+  /* ── LOADSHEDDING ── */
+  .ls-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .ls-card.open { background: linear-gradient(135deg, #091a2c, #081f18); }
+  .ls-header { display: flex; justify-content: space-between; align-items: center; }
+  .ls-name { font-size: 14px; font-weight: 600; }
+  .ls-badges { display: flex; gap: 7px; }
+  .zone-badge { border-radius: 8px; padding: 4px 10px; font-size: 12px; font-weight: 700; }
+  .ls-schedule { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+  .ls-note {
+    background: rgba(255,195,60,0.1); border: 1px solid rgba(255,195,60,0.2);
+    border-radius: 7px; padding: 7px 10px; margin-top: 9px; font-size: 11px; color: var(--muted);
+  }
+  .legend-box { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+  /* ── RATES ── */
+  .rate-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 13px 16px; border-bottom: 1px solid var(--border);
+  }
+  .rate-row:last-child { border-bottom: none; }
+  .rate-left { display: flex; gap: 12px; align-items: center; }
+  .rate-flag { font-size: 26px; }
+  .rate-code { font-size: 14px; font-weight: 700; }
+  .rate-name { font-size: 11px; color: var(--muted); }
+  .rate-price { font-size: 17px; font-weight: 700; color: var(--green); }
+  .rate-change-pos { font-size: 11px; color: var(--red); }
+  .rate-change-neg { font-size: 11px; color: var(--green); }
+
+  /* ── EMERGENCY ── */
+  .emergency-banner {
+    background: linear-gradient(135deg, #2a0810, #1a0005);
+    border: 1px solid rgba(255,61,87,0.3); border-radius: 16px;
+    padding: 14px 16px; margin-bottom: 14px;
+    display: flex; gap: 12px; align-items: center;
+  }
+  .emergency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .emergency-btn {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 12px;
+    cursor: pointer; text-align: left; outline: none;
+    transition: all 0.18s; font-family: 'Sora', sans-serif;
+    width: 100%;
+  }
+  .emergency-btn:active { transform: scale(0.96); }
+  .em-icon { font-size: 26px; margin-bottom: 6px; }
+  .em-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .em-number { font-size: 17px; font-weight: 800; margin-top: 3px; }
+  .em-call {
+    display: inline-block; border-radius: 6px; padding: 3px 8px;
+    font-size: 10px; font-weight: 600; margin-top: 6px;
+  }
+
+  /* ── INSTALL BANNER ── */
+  .install-banner {
+    background: linear-gradient(135deg, #091a2c, #0d200f);
+    border: 1px solid rgba(0,229,160,0.3); border-radius: 16px;
+    padding: 14px 16px; margin-bottom: 14px;
+  }
+  .install-title { font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+  .install-steps { font-size: 12px; color: var(--muted); line-height: 1.8; }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .tab-content.active { animation: fadeIn 0.2s ease; }
+
+  select option { background: #0f1623; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <span style="font-size:26px">🇵🇰</span>
+    <div>
+      <div class="header-title">PakHelper</div>
+      <div class="header-sub">روزانہ کی ضروری معلومات</div>
+    </div>
+  </div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    <span class="live-text">LIVE</span>
+  </div>
+</div>
+
+<!-- ══════════ HOME TAB ══════════ -->
+<div class="tab-content active" id="tab-home">
+
+  <div class="install-banner">
+    <div class="install-title">📲 Install on Your Phone — FREE</div>
+    <div class="install-steps">
+      <b>Android:</b> Chrome menu (⋮) → "Add to Home screen"<br>
+      <b>iPhone:</b> Safari Share (⬆) → "Add to Home Screen"<br>
+      Works offline after first open ✅
+    </div>
+  </div>
+
+  <div class="hero-box">
+    <div class="hero-glow"></div>
+    <div class="hero-date" id="hero-date">Wednesday, 14 May 2026</div>
+    <div class="hero-time" id="hero-time">--:--</div>
+    <div class="hero-badges">
+      <div class="badge" style="background:rgba(255,61,87,0.15);border-color:rgba(255,61,87,0.4);color:#ff3d57">⚠️ Petrol Rs 414.78</div>
+      <div class="badge" style="background:rgba(255,195,60,0.15);border-color:rgba(255,195,60,0.4);color:#ffc93c">💡 6h Loadshed</div>
+      <div class="badge" style="background:rgba(61,158,255,0.15);border-color:rgba(61,158,255,0.4);color:#3d9eff">$ Rs 279.00</div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card" style="border-left:3px solid #ff7043">
+      <div class="stat-icon">⛽</div>
+      <div class="stat-label">Petrol Price</div>
+      <div class="stat-val">Rs 414.78<span class="stat-unit">/L</span></div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid #3d9eff">
+      <div class="stat-icon">💵</div>
+      <div class="stat-label">USD Rate</div>
+      <div class="stat-val">Rs 279<span class="stat-unit">.00</span></div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid #ffc93c">
+      <div class="stat-icon">🌡️</div>
+      <div class="stat-label">Karachi Temp</div>
+      <div class="stat-val">34°<span class="stat-unit">C Hot</span></div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid #00e5a0">
+      <div class="stat-icon">🥇</div>
+      <div class="stat-label">Gold (10g)</div>
+      <div class="stat-val" style="font-size:15px">₨2,48,500</div>
+    </div>
+  </div>
+
+  <div class="section-label">📰 Latest Updates</div>
+  <div class="news-item" style="border-left-color:#ff3d57">
+    <div class="news-headline">Petrol price hiked by Rs 55/liter — record high in Pakistan history</div>
+    <div class="news-meta">
+      <span class="news-time">🕐 2 hrs ago</span>
+      <span class="news-tag" style="background:rgba(255,61,87,0.15);color:#ff3d57">Fuel</span>
+    </div>
+  </div>
+  <div class="news-item" style="border-left-color:#00e5a0">
+    <div class="news-headline">IMF approves $1.1 billion tranche for Pakistan — economy shows signs of recovery</div>
+    <div class="news-meta">
+      <span class="news-time">🕐 5 hrs ago</span>
+      <span class="news-tag" style="background:rgba(0,229,160,0.15);color:#00e5a0">Economy</span>
+    </div>
+  </div>
+  <div class="news-item" style="border-left-color:#ffc93c">
+    <div class="news-headline">Load-shedding reduced to 6 hrs in major cities — NEPRA announcement</div>
+    <div class="news-meta">
+      <span class="news-time">🕐 8 hrs ago</span>
+      <span class="news-tag" style="background:rgba(255,195,60,0.15);color:#ffc93c">Bijli</span>
+    </div>
+  </div>
+  <div class="news-item" style="border-left-color:#3d9eff">
+    <div class="news-headline">Dollar drops to Rs 278 — PKR shows slight recovery after IMF deal</div>
+    <div class="news-meta">
+      <span class="news-time">🕐 1 day ago</span>
+      <span class="news-tag" style="background:rgba(61,158,255,0.15);color:#3d9eff">Rates</span>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:14px">🛒 Bazaar Prices Today</div>
+  <div class="price-table">
+    <div class="price-row"><span class="price-name">Atta (10kg)</span><div style="display:flex;gap:8px;align-items:center"><span class="price-val">Rs 950</span><span class="price-trend" style="color:#00e5a0">↓</span></div></div>
+    <div class="price-row"><span class="price-name">Daal Chaana (1kg)</span><div style="display:flex;gap:8px;align-items:center"><span class="price-val">Rs 320</span><span class="price-trend" style="color:#ff3d57">↑</span></div></div>
+    <div class="price-row"><span class="price-name">Tomato (1kg)</span><div style="display:flex;gap:8px;align-items:center"><span class="price-val">Rs 180</span><span class="price-trend" style="color:#00e5a0">↓</span></div></div>
+    <div class="price-row"><span class="price-name">Chicken (1kg)</span><div style="display:flex;gap:8px;align-items:center"><span class="price-val">Rs 680</span><span class="price-trend" style="color:#6a90b0">→</span></div></div>
+    <div class="price-row"><span class="price-name">Cooking Oil (1L)</span><div style="display:flex;gap:8px;align-items:center"><span class="price-val">Rs 420</span><span class="price-trend" style="color:#ff3d57">↑</span></div></div>
+    <div class="price-row"><span class="price-name">Sugar (1kg)</span><div style="display:flex;gap:8px;align-items:center"><span class="price-val">Rs 145</span><span class="price-trend" style="color:#6a90b0">→</span></div></div>
+    <div class="price-row"><span class="price-name">LPG Cylinder</span><div style="display:flex;gap:8px;align-items:center"><span class="price-val">Rs 3,200</span><span class="price-trend" style="color:#ff3d57">↑</span></div></div>
+    <div class="price-row"><span class="price-name">Eggs (12 pcs)</span><div style="display:flex;gap:8px;align-items:center"><span class="price-val">Rs 280</span><span class="price-trend" style="color:#00e5a0">↓</span></div></div>
+  </div>
+</div>
+
+<!-- ══════════ FUEL TAB ══════════ -->
+<div class="tab-content" id="tab-fuel">
+  <div class="section-label">⛽ Current Fuel Prices — May 2026</div>
+
+  <div class="fuel-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><div class="fuel-name">🟢 Petrol (92 RON)</div><div class="fuel-hike">▲ Rs 15/liter increase</div></div>
+      <div style="text-align:right"><div class="fuel-price">Rs 414.78</div><div class="fuel-unit">per liter</div></div>
+    </div>
+    <div class="fuel-compare">Before hike: <span style="color:#00e5a0">Rs 399.86</span> &nbsp;|&nbsp; Now: <span style="color:#ff3d57">Rs 414.78</span></div>
+  </div>
+
+  <div class="fuel-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><div class="fuel-name">🔵 Hi-Octane (95 RON)</div><div class="fuel-hike">▲ Rs 28/liter increase</div></div>
+      <div style="text-align:right"><div class="fuel-price">Rs 429.90</div><div class="fuel-unit">per liter</div></div>
+    </div>
+    <div class="fuel-compare">Before: <span style="color:#00e5a0">Rs 401.90</span> &nbsp;|&nbsp; Now: <span style="color:#ff3d57">Rs 429.90</span></div>
+  </div>
+
+  <div class="fuel-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><div class="fuel-name">🟡 Diesel (HSD)</div><div class="fuel-hike">▲ Rs 15/liter increase</div></div>
+      <div style="text-align:right"><div class="fuel-price">Rs 414.58</div><div class="fuel-unit">per liter</div></div>
+    </div>
+    <div class="fuel-compare">Before: <span style="color:#00e5a0">Rs 399.58</span> &nbsp;|&nbsp; Now: <span style="color:#ff3d57">Rs 414.58</span></div>
+  </div>
+
+  <div class="fuel-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><div class="fuel-name">🟠 Kerosene Oil</div><div class="fuel-hike">▲ Rs 17/liter increase</div></div>
+      <div style="text-align:right"><div class="fuel-price">Rs 467.48</div><div class="fuel-unit">per liter</div></div>
+    </div>
+    <div class="fuel-compare">Before: <span style="color:#00e5a0">Rs 450.15</span> &nbsp;|&nbsp; Now: <span style="color:#ff3d57">Rs 467.48</span></div>
+  </div>
+
+  <div class="fuel-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><div class="fuel-name">⚪ Light Diesel (LDO)</div><div class="fuel-hike">▲ Rs 6/liter increase</div></div>
+      <div style="text-align:right"><div class="fuel-price">Rs 369.72</div><div class="fuel-unit">per liter</div></div>
+    </div>
+    <div class="fuel-compare">Before: <span style="color:#00e5a0">Rs 363.72</span> &nbsp;|&nbsp; Now: <span style="color:#ff3d57">Rs 369.72</span></div>
+  </div>
+
+  <div class="calc-box">
+    <div class="calc-title">🧮 Petrol Cost Calculator</div>
+    <select class="input-field" id="fuel-type" onchange="calcFuel()">
+      <option value="414.78">🟢 Petrol 92 — Rs 414.78/L</option>
+      <option value="429.90">🔵 Hi-Octane 95 — Rs 429.90/L</option>
+      <option value="414.58">🟡 Diesel HSD — Rs 414.58/L</option>
+      <option value="467.48">🟠 Kerosene — Rs 467.48/L</option>
+    </select>
+    <input class="input-field" type="number" id="fuel-liters" placeholder="Enter liters (e.g. 10)" oninput="calcFuel()">
+    <div class="calc-result" id="fuel-result" style="display:none">
+      <div class="calc-result-label">Total Cost</div>
+      <div class="calc-result-val" id="fuel-total"></div>
+      <div id="fuel-desc" style="font-size:12px;color:var(--muted);margin-top:3px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ LOADSHEDDING TAB ══════════ -->
+<div class="tab-content" id="tab-loadshed">
+  <div class="section-label">💡 Load-shedding Schedule — May 2026</div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="legend-box">
+      <span style="font-size:12px;color:var(--muted)">Zone:</span>
+      <div style="display:flex;align-items:center;gap:5px"><div class="legend-dot" style="background:#00e5a0"></div><span style="font-size:12px;color:var(--muted)">A (2h)</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><div class="legend-dot" style="background:#3d9eff"></div><span style="font-size:12px;color:var(--muted)">B (4-6h)</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><div class="legend-dot" style="background:#ffc93c"></div><span style="font-size:12px;color:var(--muted)">C (6h)</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><div class="legend-dot" style="background:#ff3d57"></div><span style="font-size:12px;color:var(--muted)">D (8h+)</span></div>
+    </div>
+  </div>
+
+  <div class="ls-card" onclick="toggleLS(this)">
+    <div class="ls-header">
+      <div class="ls-name">Karachi (KESC/K-Electric)</div>
+      <div class="ls-badges">
+        <div class="zone-badge" style="background:rgba(255,195,60,0.2);color:#ffc93c">C</div>
+        <div class="zone-badge" style="background:rgba(255,61,87,0.1);color:#ff3d57;font-size:11px">6h/day</div>
+      </div>
+    </div>
+    <div class="ls-schedule" style="display:none">⏰ 2–4 AM &nbsp;|&nbsp; 10–12 PM &nbsp;|&nbsp; 6–8 PM<div class="ls-note">⚡ Schedule varies by feeder. Check K-Electric app for your area.</div></div>
+  </div>
+
+  <div class="ls-card" onclick="toggleLS(this)">
+    <div class="ls-header">
+      <div class="ls-name">Lahore (LESCO)</div>
+      <div class="ls-badges">
+        <div class="zone-badge" style="background:rgba(61,158,255,0.2);color:#3d9eff">B</div>
+        <div class="zone-badge" style="background:rgba(255,61,87,0.1);color:#ff3d57;font-size:11px">6h/day</div>
+      </div>
+    </div>
+    <div class="ls-schedule" style="display:none">⏰ 4–6 AM &nbsp;|&nbsp; 2–4 PM &nbsp;|&nbsp; 8–10 PM<div class="ls-note">⚡ Schedule varies by feeder. Check LESCO app for your area.</div></div>
+  </div>
+
+  <div class="ls-card" onclick="toggleLS(this)">
+    <div class="ls-header">
+      <div class="ls-name">Islamabad (IESCO)</div>
+      <div class="ls-badges">
+        <div class="zone-badge" style="background:rgba(0,229,160,0.2);color:#00e5a0">A</div>
+        <div class="zone-badge" style="background:rgba(0,229,160,0.1);color:#00e5a0;font-size:11px">2h/day</div>
+      </div>
+    </div>
+    <div class="ls-schedule" style="display:none">⏰ 1–2 AM &nbsp;|&nbsp; 12–1 PM<div class="ls-note">⚡ Capital gets least load-shedding as per national policy.</div></div>
+  </div>
+
+  <div class="ls-card" onclick="toggleLS(this)">
+    <div class="ls-header">
+      <div class="ls-name">Peshawar (PESCO)</div>
+      <div class="ls-badges">
+        <div class="zone-badge" style="background:rgba(255,61,87,0.2);color:#ff3d57">D</div>
+        <div class="zone-badge" style="background:rgba(255,61,87,0.1);color:#ff3d57;font-size:11px">8h/day</div>
+      </div>
+    </div>
+    <div class="ls-schedule" style="display:none">⏰ 4–8 AM &nbsp;|&nbsp; 4–8 PM<div class="ls-note">⚡ KPK areas face higher load-shedding due to recovery issues.</div></div>
+  </div>
+
+  <div class="ls-card" onclick="toggleLS(this)">
+    <div class="ls-header">
+      <div class="ls-name">Quetta (QESCO)</div>
+      <div class="ls-badges">
+        <div class="zone-badge" style="background:rgba(255,61,87,0.2);color:#ff3d57">D</div>
+        <div class="zone-badge" style="background:rgba(255,61,87,0.1);color:#ff3d57;font-size:11px">8h/day</div>
+      </div>
+    </div>
+    <div class="ls-schedule" style="display:none">⏰ 6–10 AM &nbsp;|&nbsp; 6–10 PM<div class="ls-note">⚡ Balochistan faces highest load-shedding in the country.</div></div>
+  </div>
+
+  <div class="ls-card" onclick="toggleLS(this)">
+    <div class="ls-header">
+      <div class="ls-name">Multan (MEPCO)</div>
+      <div class="ls-badges">
+        <div class="zone-badge" style="background:rgba(255,195,60,0.2);color:#ffc93c">C</div>
+        <div class="zone-badge" style="background:rgba(255,61,87,0.1);color:#ff3d57;font-size:11px">5h/day</div>
+      </div>
+    </div>
+    <div class="ls-schedule" style="display:none">⏰ 3–5 AM &nbsp;|&nbsp; 3–5 PM &nbsp;|&nbsp; 9–10 PM<div class="ls-note">⚡ South Punjab areas vary widely by feeder zone.</div></div>
+  </div>
+
+  <div class="ls-card" onclick="toggleLS(this)">
+    <div class="ls-header">
+      <div class="ls-name">Hyderabad (HESCO)</div>
+      <div class="ls-badges">
+        <div class="zone-badge" style="background:rgba(255,61,87,0.2);color:#ff3d57">D</div>
+        <div class="zone-badge" style="background:rgba(255,61,87,0.1);color:#ff3d57;font-size:11px">8h/day</div>
+      </div>
+    </div>
+    <div class="ls-schedule" style="display:none">⏰ 5–9 AM &nbsp;|&nbsp; 5–9 PM<div class="ls-note">⚡ Interior Sindh faces severe loadshedding.</div></div>
+  </div>
+
+  <div class="ls-card" onclick="toggleLS(this)">
+    <div class="ls-header">
+      <div class="ls-name">Faisalabad (FESCO)</div>
+      <div class="ls-badges">
+        <div class="zone-badge" style="background:rgba(61,158,255,0.2);color:#3d9eff">B</div>
+        <div class="zone-badge" style="background:rgba(255,61,87,0.1);color:#ff3d57;font-size:11px">4h/day</div>
+      </div>
+    </div>
+    <div class="ls-schedule" style="display:none">⏰ 2–4 AM &nbsp;|&nbsp; 1–3 PM<div class="ls-note">⚡ Industrial zones may have different schedules.</div></div>
+  </div>
+
+  <div class="section-label" style="margin-top:14px">💡 Bijli Bachao Tips</div>
+  <div class="card">
+    <div style="font-size:13px;color:var(--muted);line-height:2">
+      ✅ Use LED bulbs — save up to 80% electricity<br>
+      ✅ Unplug chargers when not in use<br>
+      ✅ Run AC at 26°C for maximum savings<br>
+      ✅ Use pressure cooker — cooks faster, uses less gas<br>
+      ✅ Charge devices BEFORE loadshedding hours<br>
+      ✅ Solar panels — best long-term investment now<br>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ RATES TAB ══════════ -->
+<div class="tab-content" id="tab-rates">
+  <div class="section-label">💱 Exchange Rates — Today</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="rate-row">
+      <div class="rate-left"><div class="rate-flag">🇺🇸</div><div><div class="rate-code">USD</div><div class="rate-name">US Dollar</div></div></div>
+      <div style="text-align:right"><div class="rate-price">Rs 278.50</div><div class="rate-change-neg">▼ 0.8</div></div>
+    </div>
+    <div class="rate-row">
+      <div class="rate-left"><div class="rate-flag">🇪🇺</div><div><div class="rate-code">EUR</div><div class="rate-name">Euro</div></div></div>
+      <div style="text-align:right"><div class="rate-price">Rs 301.20</div><div class="rate-change-pos">▲ 1.2</div></div>
+    </div>
+    <div class="rate-row">
+      <div class="rate-left"><div class="rate-flag">🇬🇧</div><div><div class="rate-code">GBP</div><div class="rate-name">British Pound</div></div></div>
+      <div style="text-align:right"><div class="rate-price">Rs 351.40</div><div class="rate-change-pos">▲ 0.5</div></div>
+    </div>
+    <div class="rate-row">
+      <div class="rate-left"><div class="rate-flag">🇸🇦</div><div><div class="rate-code">SAR</div><div class="rate-name">Saudi Riyal</div></div></div>
+      <div style="text-align:right"><div class="rate-price">Rs 74.30</div><div class="rate-change-neg">▼ 0.2</div></div>
+    </div>
+    <div class="rate-row">
+      <div class="rate-left"><div class="rate-flag">🇦🇪</div><div><div class="rate-code">AED</div><div class="rate-name">UAE Dirham</div></div></div>
+      <div style="text-align:right"><div class="rate-price">Rs 75.80</div><div class="rate-change-neg">▼ 0.1</div></div>
+    </div>
+    <div class="rate-row">
+      <div class="rate-left"><div class="rate-flag">🇨🇳</div><div><div class="rate-code">CNY</div><div class="rate-name">Chinese Yuan</div></div></div>
+      <div style="text-align:right"><div class="rate-price">Rs 38.50</div><div class="rate-change-pos">▲ 0.3</div></div>
+    </div>
+    <div class="rate-row">
+      <div class="rate-left"><div class="rate-flag">🇰🇼</div><div><div class="rate-code">KWD</div><div class="rate-name">Kuwaiti Dinar</div></div></div>
+      <div style="text-align:right"><div class="rate-price">Rs 906.40</div><div class="rate-change-pos">▲ 2.1</div></div>
+    </div>
+    <div class="rate-row">
+      <div class="rate-left"><div class="rate-flag">🥇</div><div><div class="rate-code">GOLD</div><div class="rate-name">Gold (10 gram)</div></div></div>
+      <div style="text-align:right"><div class="rate-price" style="font-size:14px">Rs 2,48,500</div><div class="rate-change-pos">▲ 2,100</div></div>
+    </div>
+  </div>
+
+  <div class="calc-box" style="margin-top:6px;border-color:rgba(61,158,255,0.3)">
+    <div class="calc-title" style="color:#3d9eff">🔄 PKR Currency Converter</div>
+    <select class="input-field" id="curr-type" onchange="calcCurr()">
+      <option value="279.00">🇺🇸 USD — US Dollar</option>
+      <option value="327.82">🇪🇺 EUR — Euro</option>
+      <option value="379.19">🇬🇧 GBP — British Pound</option>
+      <option value="74.30">🇸🇦 SAR — Saudi Riyal</option>
+      <option value="76.00">🇦🇪 AED — UAE Dirham</option>
+      <option value="77.50">🇨🇳 CNY — Chinese Yuan (approx)</option>
+      <option value="879.85">🇰🇼 KWD — Kuwaiti Dinar</option>
+    </select>
+    <input class="input-field" type="number" id="curr-amount" placeholder="Enter PKR amount..." oninput="calcCurr()">
+    <div class="calc-result" id="curr-result" style="display:none;border-color:rgba(61,158,255,0.3);background:rgba(61,158,255,0.1)">
+      <div class="calc-result-label">Converted Amount</div>
+      <div class="calc-result-val" id="curr-total" style="color:#3d9eff"></div>
+      <div id="curr-desc" style="font-size:12px;color:var(--muted);margin-top:3px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ EMERGENCY TAB ══════════ -->
+<div class="tab-content" id="tab-emergency">
+  <div class="emergency-banner">
+    <span style="font-size:32px">🚨</span>
+    <div>
+      <div style="color:#ff3d57;font-weight:700;font-size:15px">Emergency Numbers</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:2px">Tap to call instantly • Works without internet • No balance needed for 15</div>
+    </div>
+  </div>
+
+  <div class="emergency-grid">
+    <button class="emergency-btn" onclick="callNumber('15')" style="border-color:rgba(61,158,255,0.3)">
+      <div class="em-icon">👮</div>
+      <div class="em-name">Police</div>
+      <div class="em-number" style="color:#3d9eff">15</div>
+      <div class="em-call" style="background:rgba(61,158,255,0.15);color:#3d9eff">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('1122')" style="border-color:rgba(255,61,87,0.3)">
+      <div class="em-icon">🚑</div>
+      <div class="em-name">Ambulance</div>
+      <div class="em-number" style="color:#ff3d57">1122</div>
+      <div class="em-call" style="background:rgba(255,61,87,0.15);color:#ff3d57">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('16')" style="border-color:rgba(255,112,67,0.3)">
+      <div class="em-icon">🚒</div>
+      <div class="em-name">Fire Brigade</div>
+      <div class="em-number" style="color:#ff7043">16</div>
+      <div class="em-call" style="background:rgba(255,112,67,0.15);color:#ff7043">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('115')" style="border-color:rgba(255,61,87,0.3)">
+      <div class="em-icon">❤️</div>
+      <div class="em-name">Edhi Foundation</div>
+      <div class="em-number" style="color:#ff3d57">115</div>
+      <div class="em-call" style="background:rgba(255,61,87,0.15);color:#ff3d57">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('1777')" style="border-color:rgba(0,229,160,0.3)">
+      <div class="em-icon">🪪</div>
+      <div class="em-name">NADRA</div>
+      <div class="em-number" style="color:#00e5a0">1777</div>
+      <div class="em-call" style="background:rgba(0,229,160,0.15);color:#00e5a0">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('118')" style="border-color:rgba(255,195,60,0.3)">
+      <div class="em-icon">⚡</div>
+      <div class="em-name">NEPRA (Bijli)</div>
+      <div class="em-number" style="color:#ffc93c">118</div>
+      <div class="em-call" style="background:rgba(255,195,60,0.15);color:#ffc93c">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('080000272')" style="border-color:rgba(255,112,67,0.3)">
+      <div class="em-icon">🔥</div>
+      <div class="em-name">OGRA (Gas)</div>
+      <div class="em-number" style="color:#ff7043;font-size:13px">0800-00272</div>
+      <div class="em-call" style="background:rgba(255,112,67,0.15);color:#ff7043">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('0800-99000')" style="border-color:rgba(255,61,87,0.3)">
+      <div class="em-icon">🏥</div>
+      <div class="em-name">Sehat Sahulat</div>
+      <div class="em-number" style="color:#ff3d57;font-size:13px">0800-99000</div>
+      <div class="em-call" style="background:rgba(255,61,87,0.15);color:#ff3d57">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('1700')" style="border-color:rgba(255,61,87,0.3)">
+      <div class="em-icon">🆘</div>
+      <div class="em-name">Disaster (NDMA)</div>
+      <div class="em-number" style="color:#ff3d57">1700</div>
+      <div class="em-call" style="background:rgba(255,61,87,0.15);color:#ff3d57">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('1043')" style="border-color:rgba(255,105,180,0.3)">
+      <div class="em-icon">👩</div>
+      <div class="em-name">Women Helpline</div>
+      <div class="em-number" style="color:#ff69b4">1043</div>
+      <div class="em-call" style="background:rgba(255,105,180,0.15);color:#ff69b4">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('117')" style="border-color:rgba(0,229,160,0.3)">
+      <div class="em-icon">🚂</div>
+      <div class="em-name">Pakistan Railways</div>
+      <div class="em-number" style="color:#00e5a0">117</div>
+      <div class="em-call" style="background:rgba(0,229,160,0.15);color:#00e5a0">📞 Call Now</div>
+    </button>
+    <button class="emergency-btn" onclick="callNumber('111727273')" style="border-color:rgba(61,158,255,0.3)">
+      <div class="em-icon">🏦</div>
+      <div class="em-name">SBP Banking</div>
+      <div class="em-number" style="color:#3d9eff;font-size:12px">111-727-273</div>
+      <div class="em-call" style="background:rgba(61,158,255,0.15);color:#3d9eff">📞 Call Now</div>
+    </button>
+  </div>
+
+  <div class="section-label" style="margin-top:14px">📌 Important Info</div>
+  <div class="card">
+    <div style="font-size:13px;color:var(--muted);line-height:2">
+      📌 <b style="color:var(--text)">15</b> works on any network, even without balance<br>
+      📌 <b style="color:var(--text)">1122</b> Rescue is completely free across Pakistan<br>
+      📌 <b style="color:var(--text)">Edhi 115</b> operates 24/7 — ambulance & shelter<br>
+      📌 <b style="color:var(--text)">NADRA 1777</b> for lost CNIC and ID issues<br>
+      📌 Screenshot this page for offline emergency use<br>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BOTTOM NAV ══════════ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('home', this)">
+    <div class="nav-icon">🏠</div>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('fuel', this)">
+    <div class="nav-icon">⛽</div>
+    <span class="nav-label">Petrol</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('loadshed', this)">
+    <div class="nav-icon">💡</div>
+    <span class="nav-label">Bijli</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('rates', this)">
+    <div class="nav-icon">💱</div>
+    <span class="nav-label">Rates</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('emergency', this)">
+    <div class="nav-icon">🚨</div>
+    <span class="nav-label">Madad</span>
+  </button>
+</nav>
+
+<script>
+  // ── Clock ──
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('hero-time').textContent = h + ':' + m + ':' + s;
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('hero-date').textContent =
+      '📍 Pakistan — ' + days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // ── Tab Switching ──
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ── Load-shedding Toggle ──
+  function toggleLS(card) {
+    const sched = card.querySelector('.ls-schedule');
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.ls-card').forEach(c => {
+      c.classList.remove('open');
+      c.querySelector('.ls-schedule').style.display = 'none';
+    });
+    if (!isOpen) {
+      card.classList.add('open');
+      sched.style.display = 'block';
+    }
+  }
+
+  // ── Fuel Calculator ──
+  function calcFuel() {
+    const price = parseFloat(document.getElementById('fuel-type').value);
+    const liters = parseFloat(document.getElementById('fuel-liters').value);
+    const res = document.getElementById('fuel-result');
+    if (liters && liters > 0) {
+      const total = (price * liters).toFixed(0);
+      document.getElementById('fuel-total').textContent = 'Rs ' + parseInt(total).toLocaleString();
+      document.getElementById('fuel-desc').textContent = liters + ' liters × Rs ' + price + '/liter';
+      res.style.display = 'block';
+    } else {
+      res.style.display = 'none';
+    }
+  }
+
+  // ── Currency Converter ──
+  const currNames = {
+    '279.00': 'USD', '327.82': 'EUR', '379.19': 'GBP',
+    '74.30': 'SAR', '76.00': 'AED', '77.50': 'CNY', '879.85': 'KWD'
+  };
+  function calcCurr() {
+    const rate = parseFloat(document.getElementById('curr-type').value);
+    const pkr = parseFloat(document.getElementById('curr-amount').value);
+    const res = document.getElementById('curr-result');
+    if (pkr && pkr > 0) {
+      const converted = (pkr / rate).toFixed(4);
+      const code = currNames[String(rate)];
+      document.getElementById('curr-total').textContent = converted + ' ' + code;
+      document.getElementById('curr-desc').textContent = 'Rs ' + pkr.toLocaleString() + ' ÷ ' + rate + ' = ' + converted + ' ' + code;
+      res.style.display = 'block';
+    } else {
+      res.style.display = 'none';
+    }
+  }
+
+  // ── Emergency Call ──
+  function callNumber(num) {
+    window.location.href = 'tel:' + num;
+  }
+</script>
+</body>
+</html>
